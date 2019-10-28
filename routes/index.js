@@ -42,4 +42,31 @@ router.route("/LoginPatient").post((req,res,next)=>{
         res.end("invalid username or password");
     })
 })
+router.route("/account").post((req,res)=>{
+    const {username}=req.body;
+    patientModel.findOne({username:username})
+    .then(patient=>{
+        console.log(patient);
+        res.json(patient);
+    })
+    .catch(err=>{
+        res.end(err);
+    })
+})
+router.route("/update").post((req,res)=>{
+    const {email,address,username,fullName}=req.body;
+    patientModel.update({username:username},
+        {$set:
+            {email:email,
+            address:address,
+            fullName:fullName
+        }
+        })
+        .then(msg=>{
+            res.end("changed successfully");
+        })
+        .catch(err=>{
+            res.end(err);
+        })
+})
 module.exports=router;

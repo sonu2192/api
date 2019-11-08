@@ -1,5 +1,6 @@
 const router=require('express').Router();
 const medicineModel=require('../models/medicines');
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 router.route("/StoreMedicine").post((req,res)=>{
     const {medicines,date,patientName,doctorName}=req.body;
     const medicineRecord=new medicineModel({
@@ -36,5 +37,25 @@ router.route('/medicineList').post((req,res)=>{
     .catch(err=>{
         res.end(err);
     })
+})
+router.route('/download').post((req,res)=>{
+    const {onlymList}=req.body;
+    console.log(onlymList);
+    const csvWriter = createCsvWriter({
+        path:'C:/Users/Hp/Desktop/E-Swasth/client/src/components/file.csv',
+        header: [
+            {id: 'type', title: 'TYPE'},
+            {id: 'name', title: 'NAME'},
+            {id: 'dosage', title: 'DOSAGE'}
+        ]
+    });
+    console.log(onlymList);
+    csvWriter.writeRecords(onlymList)
+    .then(() => {
+        console.log('...Done');
+    })
+    .catch(err=>{
+        console.log(err);
+    });
 })
 module.exports=router;

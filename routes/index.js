@@ -3,14 +3,14 @@ const patientModel=require('../models/patient');
 router.route("/RegisterPatient").post((req,res)=>{
     req.body.question='Hello world';
     console.log(req.body);
-    const {first_name,last_name,username,email,password,gender,address}=req.body;
+    const {first_name,last_name,username,number,password,gender,address}=req.body;
     const patient=new patientModel({
         name:{
         first_name:first_name,
         last_name:last_name
         },
         username:username,
-        email:email,
+        number:number,
         password:password,
         fullName:first_name+last_name,
         gender:gender,
@@ -54,10 +54,10 @@ router.route("/account").post((req,res)=>{
     })
 })
 router.route("/update").post((req,res)=>{
-    const {email,address,username,fullName}=req.body;
+    const {number,address,username,fullName}=req.body;
     patientModel.update({username:username},
         {$set:
-            {email:email,
+            {number:number,
             address:address,
             fullName:fullName
         }

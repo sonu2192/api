@@ -41,9 +41,11 @@ router.route("/:patient_id").get((req,res)=>{
 })
 router.route("/getSlots").post((req,res)=>{
     const {doctor,date}=req.body;
-    //console.log(date);
+    console.log(date);
+    console.log(doctor);
     slotModel.find({$and:[{doctorName:doctor},{date:date}]})
     .then(slots=>{
+        console.log(slots);
         res.json(slots);
     })
     .catch(err=>{

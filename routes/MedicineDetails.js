@@ -1,6 +1,8 @@
 const router=require('express').Router();
 const medicineModel=require('../models/medicines');
+const csvFilePath=__dirname+"/med.csv";
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+const csv=require('csvtojson');
 router.route("/StoreMedicine").post((req,res)=>{
     const {medicines,date,patientName,doctorName}=req.body;
     const medicineRecord=new medicineModel({
@@ -58,4 +60,32 @@ router.route('/download').post((req,res)=>{
         console.log(err);
     });
 })
+router.route('/convert').post((req,res)=>{
+    const {symp}=req.body
+    csv({
+      noheader:false,
+      headers:['sno','name','price']
+    })
+    .fromFile(csvFilePath)
+    .then((jsonObj)=>{
+      res.json(jsonObj);
+    })
+    .catch(err=>{
+        res.end(err);
+    })
+  })
+  router.route('/calculateCost').post((req,res)=>{
+      const {medCost}=req.body;
+      //console.log(medCost);
+      var cost=0;
+      medCost.map(medicine=>{
+          return medicine.map(med=>{
+              cost=cost+parseInt(med.price);
+          })
+      })
+      console.log(cost);
+      const strCost=cost.toString();
+      console.log(strCost);
+      res.end(strCost);
+  })
 module.exports=router;

@@ -1,5 +1,7 @@
 const router=require('express').Router();
 const patientModel=require('../models/patient');
+const slotModal=require('../models/slot');
+const medicineModal=require('../models/medicines');
 router.route("/RegisterPatient").post((req,res)=>{
     req.body.question='Hello world';
     console.log(req.body);
@@ -12,7 +14,7 @@ router.route("/RegisterPatient").post((req,res)=>{
         username:username,
         number:number,
         password:password,
-        fullName:first_name+last_name,
+        fullName:first_name+" "+last_name,
         gender:gender,
         address:address,
         type:'patient'
@@ -54,16 +56,25 @@ router.route("/account").post((req,res)=>{
     })
 })
 router.route("/update").post((req,res)=>{
-    const {number,address,username,fullName}=req.body;
+    const {oldName,number,address,username,fullName,password}=req.body;
+    console.log(password);
     patientModel.update({username:username},
         {$set:
             {number:number,
             address:address,
-            fullName:fullName
+            fullName:fullName,
+            password:password
         }
         })
         .then(msg=>{
-            res.end("changed successfully");
+            slotModal.updateMany({patientName:oldName},{$set:{patientName:fullName}})
+            .then(item=>{
+                medicineModal.updateMany({patient:oldName},{$set:{patient:fullName}})
+                .then(it=>{
+                    console.log(oldName);
+                    res.end("Updated successfully");
+                })
+            })
         })
         .catch(err=>{
             res.end(err);

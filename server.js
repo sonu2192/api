@@ -7,6 +7,7 @@ const bodyParser=require('body-parser');
 const medicineRouter=require('./routes/MedicineDetails');
 const slotRouter=require('./routes/bookslot');
 const otpRouter=require('./routes/otp');
+const adminRouter=require('./routes/admindetails');
 const app = express();
 const port = 5000;
 app.use(cors());
@@ -30,6 +31,7 @@ app.use('/doctors',doctorRouter);
 app.use('/medicines',medicineRouter);
 app.use('/bookslot',slotRouter);
 app.use('/getotp',otpRouter);
-app.listen(port, () => {
+app.use('/admin',adminRouter);
+app.listen(port, ()=>{
   console.log(`server is running on port:${port}`);
 });

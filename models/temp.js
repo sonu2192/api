@@ -17,5 +17,5 @@ const DoctorSchema = new mongoose.Schema({
     registration_no:String,
     email:String
 });
-const DoctorModel = mongoose.model('doctors', DoctorSchema);
-module.exports = DoctorModel;
+const tempModel = mongoose.model('temp_doctor', DoctorSchema);
+module.exports = tempModel;
